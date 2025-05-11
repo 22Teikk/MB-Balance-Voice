@@ -30,20 +30,23 @@ class NotificationListener : NotificationListenerService(){
 //            }
 
             if(title != null && title.equals("Thông báo biến động số dư") && text != null){
-                Log.d("TINHTINH", title);
-                val regex = Regex("""\+([\d,]+)VND\s([\d\/\:\s]+).+\|ND:\s([\w\s]+)""")
+                Log.d("Teikk_Noti", "Title: $title");
+                Log.d("Teikk_Noti", "Text: $text");
+                val regex = Regex("""([+-])([\d,]+)VND\s([\d\/\:\s]+).+\|ND:\s([\w\s]+)""")
                 val matchResult = regex.find(text)
 
                 if (matchResult != null) {
-                    val amount = matchResult.groupValues[1]
-                    val datetime = matchResult.groupValues[2]
-                    val memo = matchResult.groupValues[3]
+                    val status = matchResult.groupValues[1]
+                    val amount = matchResult.groupValues[2]
+                    val datetime = matchResult.groupValues[3]
+                    val memo = matchResult.groupValues[4]
 
                     // Gửi thông báo qua Broadcast
                     val intent = Intent("com.teikk.mbbalancevoice.BALANCE_UPDATE")
                     intent.putExtra("amount", amount)
                     intent.putExtra("datetime", datetime)
                     intent.putExtra("memo", memo)
+                    intent.putExtra("status", status)
                     LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
                     playRingtone()
                 } else {

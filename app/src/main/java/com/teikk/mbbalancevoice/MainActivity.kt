@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,18 +23,18 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        if (!isRunning) {
+
+        findViewById<Button>(R.id.btnNoti).setOnClickListener {
+            if (!isNotificationServiceEnabled()) {
+                val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+                startActivity(intent)
+            }
+        }
+        findViewById<Button>(R.id.btnAccess).setOnClickListener {
+            if (isRunning) return@setOnClickListener
             val i = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(i)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!isNotificationServiceEnabled()) {
-            val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-            startActivity(intent)
         }
     }
 
